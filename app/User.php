@@ -36,4 +36,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function laundromat() {
+        return $this->hasOne(\App\Laundromat::class);
+    }
+
+    public function transactions() {
+        return $this->hasMany(\App\Transaction::class);
+    }
 }
