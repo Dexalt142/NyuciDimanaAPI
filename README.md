@@ -19,3 +19,17 @@
 | password | string    |
 | role     | integer   |
 ---
+### Me
+#### GET `/api/auth/me`
+#### Authorization
+```
+    Bearer token 
+```
+---
+### Logout
+#### POST `/api/auth/logout`
+#### Authorization
+```
+    Bearer token
+```
+---
