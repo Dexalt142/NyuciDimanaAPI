@@ -18,6 +18,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::group(['prefix' => 'auth'], function() {
+    Route::post('login', 'Auth\LoginController@login')->name('api.auth.login');
+    Route::post('register', 'Auth\RegisterController@register')->name('api.auth.register');
+
+    Route::group(['middleware' => ['api.auth']], function() {
+        Route::get('me', 'Auth\SessionController@getUser')->name('api.auth.me');
+        Route::post('logout', 'Auth\SessionController@logout')->name('api.auth.logout');
+    });
+});
 
 Route::group(['middleware' => ['api.auth']], function() {
     Route::get('laundromat', 'LaundromatController@getLaundromats')->name('api.laundromat');
