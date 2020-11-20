@@ -29,5 +29,9 @@ Route::group(['prefix' => 'auth'], function() {
 });
 
 Route::group(['middleware' => ['api.auth']], function() {
-    Route::get('laundromat', 'LaundromatController@getLaundromats')->name('api.laundromat');
+
+    Route::group(['prefix' => 'laundromat'], function() {
+        Route::get('/', 'LaundromatController@getLaundromats')->name('api.laundromat');
+        Route::post('/create', 'LaundromatController@createLaundromat')->name('api.laundromat.create');
+    });
 });
