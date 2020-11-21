@@ -2,9 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthTest extends TestCase
 {
@@ -33,5 +35,23 @@ class AuthTest extends TestCase
         ->assertJsonStructure([
             'status', 'message', 'data'
         ]);
+    }
+
+    public function testMe() {
+        $user = User::whereEmail('testuser@nyucidimanaapi.test')->first();
+        $token = JWTAuth::fromUser($user);
+
+        $response = $this->withHeaders(['Authorization' => "Bearer $token"])->get(route('api.auth.me'));
+
+        $response->assertStatus(200);
+    }
+
+    public function testLogout() {
+        $user = User::whereEmail('testuser@nyucidimanaapi.test')->first();
+        $token = JWTAuth::fromUser($user);
+
+        $response = $this->withHeaders(['Authorization' => "Bearer $token"])->post(route('api.auth.logout'));
+
+        $response->assertStatus(200);
     }
 }
