@@ -32,4 +32,31 @@ class LaundromatTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function testGetAllLaundromats() {
+        $user = User::whereEmail('testuser@nyucidimanaapi.test')->first();
+        $token = JWTAuth::fromUser($user);
+
+        $response = $this->withHeaders(['Authorization' => "Bearer $token"])->get(route('api.laundromat'));
+
+        $response->assertStatus(200);
+    }
+
+    public function testGetLaundromat() {
+        $user = User::whereEmail('testuser@nyucidimanaapi.test')->first();
+        $token = JWTAuth::fromUser($user);
+
+        $response = $this->withHeaders(['Authorization' => "Bearer $token"])->get(route('api.laundromat.get', [1]));
+
+        $response->assertStatus(200);
+    }
+
+    public function testGetUserLaundromat() {
+        $user = User::whereEmail('testuser@nyucidimanaapi.test')->first();
+        $token = JWTAuth::fromUser($user);
+
+        $response = $this->withHeaders(['Authorization' => "Bearer $token"])->get(route('api.laundromat.my'));
+
+        $response->assertStatus(200);
+    }
 }

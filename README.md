@@ -32,4 +32,43 @@
 ```
     Bearer token
 ```
+
+## Laundromat
+### Get All Laundromats
+#### GET `/api/laundromat`
+#### Authorization
+```
+    Bearer token
+```
 ---
+### Get User's Laundromat
+#### GET `/api/laundromat/my`
+#### Authorization
+```
+    Bearer token
+```
+---
+### Get Laundromat by ID
+#### GET `/api/laundromat/{id}`
+#### Request Parameter
+| Name     | Data type |
+|----------|-----------|
+| id       | integer   |
+#### Authorization
+```
+    Bearer token 
+```
+---
+### Create Laundromat
+#### POST `/api/laundromat/create`
+#### Request Body
+| Name      | Data type |
+|-----------|-----------|
+| name      | string    |
+| address   | string    |
+| latitude  | float     |
+| longitude | float     |
+#### Authorization
+```
+    Bearer token
+```

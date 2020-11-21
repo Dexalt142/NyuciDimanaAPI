@@ -19,6 +19,42 @@ class LaundromatController extends Controller
         ]);
     }
 
+    public function getLaundromat($id) {
+        $laundromat = Laundromat::find($id);
+
+        if($laundromat) {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Fetch success',
+                'data' => $laundromat
+            ]);
+        }
+
+        return response()->json([
+            'status' => 404,
+            'message' => 'Laundromat not found',
+        ], 404);
+    }
+
+    public function getUserLaundromat() {
+        $user = auth()->user();
+
+        if($user->role == 1) {
+            $laundromat = $user->laundromat;
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Fetch success',
+                'data' => $laundromat
+            ]);
+        }
+
+        return response()->json([
+            'status' => 404,
+            'message' => 'Laundromat not found'
+        ], 404);
+    }
+
     public function createLaundromat(Request $request) {
 
         $attributes = [
