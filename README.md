@@ -1,4 +1,5 @@
 # Nyuci Dimana API
+![build](https://travis-ci.com/Dexalt142/NyuciDimanaAPI.svg?branch=master)
 # API Documentation
 ## Authentication & Authorization
 ### Login
