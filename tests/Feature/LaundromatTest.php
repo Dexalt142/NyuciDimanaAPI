@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class CreateLaundromatTest extends TestCase
+class LaundromatTest extends TestCase
 {
 
     use WithFaker;
@@ -18,8 +18,7 @@ class CreateLaundromatTest extends TestCase
      *
      * @return void
      */
-    public function testExample()
-    {
+    public function testCreateLaundromat() {
 
         $user = User::whereEmail('testuser@nyucidimanaapi.test')->first();
         $token = JWTAuth::fromUser($user);
