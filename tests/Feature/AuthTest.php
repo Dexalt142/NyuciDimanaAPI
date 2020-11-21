@@ -6,18 +6,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class RegisterTest extends TestCase
+class AuthTest extends TestCase
 {
 
     use WithFaker;
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function testExample()
-    {
+    public function testRegister() {
         $response = $this->json('POST', route('api.auth.register'), [
             'name' => $this->faker('id_ID')->name(),
             'email' => $this->faker('id_ID')->email(),
@@ -27,5 +21,17 @@ class RegisterTest extends TestCase
         ]);
 
         $response->assertStatus(200);
+    }
+
+    public function testLogin() {
+        $response = $this->json('POST', route('api.auth.login'), [
+            'email' => 'testuser@nyucidimanaapi.test',
+            'password' => 'testuser'
+        ]);
+
+        $response->assertStatus(200)
+        ->assertJsonStructure([
+            'status', 'message', 'data'
+        ]);
     }
 }
