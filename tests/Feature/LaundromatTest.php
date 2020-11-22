@@ -20,7 +20,7 @@ class LaundromatTest extends TestCase
      */
     public function testCreateLaundromat() {
 
-        $user = User::whereEmail('testuser@nyucidimanaapi.test')->first();
+        $user = User::whereEmail('testowner@nyucidimanaapi.test')->first();
         $token = JWTAuth::fromUser($user);
 
         $response = $this->withHeaders(['Authorization' => "Bearer $token"])->json('POST', route('api.laundromat.create'), [
@@ -52,7 +52,7 @@ class LaundromatTest extends TestCase
     }
 
     public function testGetUserLaundromat() {
-        $user = User::whereEmail('testuser@nyucidimanaapi.test')->first();
+        $user = User::whereEmail('testowner@nyucidimanaapi.test')->first();
         $token = JWTAuth::fromUser($user);
 
         $response = $this->withHeaders(['Authorization' => "Bearer $token"])->get(route('api.laundromat.my'));

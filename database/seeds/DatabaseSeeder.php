@@ -19,6 +19,14 @@ class DatabaseSeeder extends Seeder
             'email' => 'testuser@nyucidimanaapi.test',
             'password' => Hash::make('testuser'),
             'phone_number' => '0812345678',
+            'role' => 0
+        ]);
+
+        $defaultOwner = User::create([
+            'name' => 'Test Owner',
+            'email' => 'testowner@nyucidimanaapi.test',
+            'password' => Hash::make('testowner'),
+            'phone_number' => '0812345679',
             'role' => 1
         ]);
     }

@@ -14,10 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::group(['prefix' => 'auth'], function() {
     Route::post('login', 'Auth\LoginController@login')->name('api.auth.login');
     Route::post('register', 'Auth\RegisterController@register')->name('api.auth.register');
@@ -36,4 +32,16 @@ Route::group(['middleware' => ['api.auth']], function() {
         Route::get('{id}', 'LaundromatController@getLaundromat')->name('api.laundromat.get');
         Route::post('/create', 'LaundromatController@createLaundromat')->name('api.laundromat.create');
     });
+
+    Route::group(['prefix' => 'transaction'], function() {
+        
+        Route::group(['prefix' => 'user'], function() {
+            Route::get('/', 'TransactionController@getUserAllTransactions')->name('api.transaction.user');
+            Route::get('{id}', 'TransactionController@getUserTransaction')->name('api.transaction.user.get');
+        });
+
+        Route::get('/', 'TransactionController@getLaundromatAllTransactions')->name('api.transaction');
+        Route::get('{id}', 'TransactionController@getLaundromatTransaction')->name('api.transaction.get');
+    });
+
 });
