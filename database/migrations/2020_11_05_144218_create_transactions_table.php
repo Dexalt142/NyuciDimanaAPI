@@ -18,8 +18,8 @@ class CreateTransactionsTable extends Migration
             $table->string('transaction_code')->unique();
             $table->integer('weight');
             $table->integer('price');
-            $table->dateTime('start_time');
-            $table->dateTime('end_time')->nullable();
+            $table->dateTime('start_date');
+            $table->dateTime('end_date')->nullable();
             $table->string('status', 1);
             $table->unsignedBigInteger('laundromat_id');
             $table->unsignedBigInteger('user_id')->nullable();

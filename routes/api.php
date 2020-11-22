@@ -42,6 +42,7 @@ Route::group(['middleware' => ['api.auth']], function() {
 
         Route::get('/', 'TransactionController@getLaundromatAllTransactions')->name('api.transaction');
         Route::get('{id}', 'TransactionController@getLaundromatTransaction')->name('api.transaction.get');
+        Route::post('create', 'TransactionController@createTransaction')->name('api.transaction.create');
     });
 
 });

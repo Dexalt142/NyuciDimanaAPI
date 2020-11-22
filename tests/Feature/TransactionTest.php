@@ -32,4 +32,21 @@ class TransactionTest extends TestCase
 
         $response->assertStatus(200);
     }
+    
+    public function testCreateTransaction() {
+        $user = User::whereEmail('testowner@nyucidimanaapi.test')->first();
+        $token = JWTAuth::fromUser($user);
+    
+        $weight = rand(1, 5);
+        $price = 2500 * $weight;
+
+        $response = $this->withHeaders(['Authorization' => "Bearer $token"])->post(route('api.transaction.create'), [
+            'weight' => $weight,
+            'price' => $price,
+            'start_date' => \Carbon\Carbon::now()->format('m/d/Y H:i:s')
+        ]);
+
+        $response->assertStatus(200);
+
+    }
 }
