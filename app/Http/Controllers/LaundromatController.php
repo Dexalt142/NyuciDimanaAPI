@@ -63,6 +63,38 @@ class LaundromatController extends Controller
         ], 401);
     }
 
+    public function getLaundromatStatistic() {
+        $user = auth()->user();
+
+        if($user->role == 1) {
+            $laundromat = $user->laundromat;
+
+            if($laundromat) {
+                $statistics = [
+                    'total_transactions' => $laundromat->transactions->count(),
+                    'revenue' => $this->formatRupiah($laundromat->transactions->sum('price'), true)
+                ];
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Fetch success',
+                    'data' => $statistics
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Fetch failed'
+                ], 404);
+            }
+
+        }
+
+        return response()->json([
+            'status' => 401,
+            'message' => 'Unauthorized'
+        ], 401);
+    }
+
     public function createLaundromat(Request $request) {
 
         $attributes = [
