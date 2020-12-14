@@ -36,6 +36,25 @@ class LaundromatController extends Controller
         ], 404);
     }
 
+    public function getNearbyLaundromats($latitude, $longitude) {
+
+        $laundromats = Laundromat::all();
+        $nearbyLaundromats = collect();
+
+        foreach($laundromats as $laundromat) {
+            if ($this->measureDistance($latitude, $longitude, $laundromat->latitude, $laundromat->longitude) <= 2000) {
+                $nearbyLaundromats->push($laundromat);
+            }
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Fetch success',
+            'data' => $nearbyLaundromats
+        ]);
+
+    }
+
     public function getUserLaundromat() {
         $user = auth()->user();
 
@@ -72,6 +91,9 @@ class LaundromatController extends Controller
             if($laundromat) {
                 $statistics = [
                     'total_transactions' => $laundromat->transactions->count(),
+                    'transaction_pending' => $laundromat->transactions->where('status', '0')->count(),
+                    'transaction_progress' => $laundromat->transactions->where('status', '1')->count(),
+                    'transaction_done' => $laundromat->transactions->where('status', '2')->count(),
                     'revenue' => $this->formatRupiah($laundromat->transactions->sum('price'), true)
                 ];
 
