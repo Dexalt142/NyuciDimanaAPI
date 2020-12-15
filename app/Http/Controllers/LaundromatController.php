@@ -36,23 +36,85 @@ class LaundromatController extends Controller
         ], 404);
     }
 
+    public function getNearbyLaundromats($latitude, $longitude) {
+
+        $laundromats = Laundromat::all();
+        $nearbyLaundromats = collect();
+
+        foreach($laundromats as $laundromat) {
+            if ($this->measureDistance($latitude, $longitude, $laundromat->latitude, $laundromat->longitude) <= 2000) {
+                $nearbyLaundromats->push($laundromat);
+            }
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Fetch success',
+            'data' => $nearbyLaundromats
+        ]);
+
+    }
+
     public function getUserLaundromat() {
         $user = auth()->user();
 
         if($user->role == 1) {
             $laundromat = $user->laundromat;
 
-            return response()->json([
-                'status' => 200,
-                'message' => 'Fetch success',
-                'data' => $laundromat
-            ]);
+            if($laundromat) {
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Fetch success',
+                    'data' => $laundromat
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Fetch failed'
+                ], 404);
+            }
+
         }
 
         return response()->json([
-            'status' => 404,
-            'message' => 'Laundromat not found'
-        ], 404);
+            'status' => 401,
+            'message' => 'Unauthorized'
+        ], 401);
+    }
+
+    public function getLaundromatStatistic() {
+        $user = auth()->user();
+
+        if($user->role == 1) {
+            $laundromat = $user->laundromat;
+
+            if($laundromat) {
+                $statistics = [
+                    'total_transactions' => $laundromat->transactions->count(),
+                    'transaction_pending' => $laundromat->transactions->where('status', '0')->count(),
+                    'transaction_progress' => $laundromat->transactions->where('status', '1')->count(),
+                    'transaction_done' => $laundromat->transactions->where('status', '2')->count(),
+                    'revenue' => $this->formatRupiah($laundromat->transactions->sum('price'), true)
+                ];
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Fetch success',
+                    'data' => $statistics
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Fetch failed'
+                ], 404);
+            }
+
+        }
+
+        return response()->json([
+            'status' => 401,
+            'message' => 'Unauthorized'
+        ], 401);
     }
 
     public function createLaundromat(Request $request) {
@@ -83,22 +145,24 @@ class LaundromatController extends Controller
         }
 
         $user = auth()->user();
-        
-        $laundromat = Laundromat::create([
-            'name' => $request->name,
-            'address' => $request->address,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'status' => 0,
-            'user_id' => $user->id
-        ]);
-
-        if($laundromat->save()) {
-            return response()->json([
-                'status' => 200,
-                'message' => 'Create laundromat success',
-                'data' => $laundromat
+        $laundromat = $user->laundromat;
+        if(!$laundromat) {
+            $laundromat = Laundromat::create([
+                'name' => $request->name,
+                'address' => $request->address,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+                'status' => 0,
+                'user_id' => $user->id
             ]);
+    
+            if($laundromat->save()) {
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Create laundromat success',
+                    'data' => $laundromat
+                ]);
+            }
         }
         
         return response()->json([
